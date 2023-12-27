@@ -1,1 +1,1 @@
-extern/rylib
+external/rylib
