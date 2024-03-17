@@ -1,0 +1,50 @@
+{
+    "version": 8,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 29,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "win",
+            "displayName": "Visual Studio Community 2022 x64",
+            "description": "Using compilers for Visual Studio 17 2022 (x64 architecture)",
+            "generator": "Visual Studio 17 2022",
+            "toolset": "host=x64",
+            "architecture": "x64",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "debug-win-x64",
+            "displayName": "Debug-win-x64",
+            "configurePreset": "win",
+            "configuration": "Debug"
+        },
+        {
+            "name": "release-win-x64",
+            "displayName": "Release-win-x64",
+            "configurePreset": "win",
+            "configuration": "Release"
+        },
+        {
+            "name": "min_size_release-win-x64",
+            "displayName": "MinSizeRel-win-x64",
+            "configurePreset": "win",
+            "configuration": "MinSizeRel"
+        },
+        {
+            "name": "deb_info_release-win-x64",
+            "displayName": "RelWithDebInfo-win-x64",
+            "configurePreset": "win",
+            "configuration": "RelWithDebInfo"
+        }
+    ]
+}
