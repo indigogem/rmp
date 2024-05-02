@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.29)
 project(kmp C CXX)
 
 
-find_package(SDL3 REQUIRED)
+find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3)
 
 set(_source_dir "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
