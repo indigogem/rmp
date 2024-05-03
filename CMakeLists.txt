@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.29)
 
 project(kmp C CXX)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+message(STATUS "${CMAKE_MODULE_PATH}")
+
+
 set(_source_dir "${CMAKE_CURRENT_SOURCE_DIR}/src")
 set(_lib_name ${PROJECT_NAME})
 set( project_TARGETS
@@ -10,7 +15,26 @@ set( project_TARGETS
    )
 
 find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3)
-find_package(EASTL REQUIRED)
+find_package(EASTL MODULE REQUIRED)
+# find_library(EASTL_LIB 
+             # NAMES EASTL
+             # HINTS "${CMAKE_PREFIX_PATH}/lib"
+             # )
+             
+
+# add_library(eastl STATIC IMPORTED GLOBAL)
+# set_target_properties(eastl PROPERTIES
+    # IMPORTED_LOCATION ${EASTL_LIB}
+    # INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_PREFIX_PATH}/include;g:/projects/rmp/thirdparty/build/eastl/eastl/src/eastl/test/packages/EABase/include/Common"
+    # #INTERFACE_INCLUDE_DIRECTORIES "g:/projects/rmp/thirdparty/build/eastl/eastl/src/eastl/test/packages/EABase/include/Common"
+  # )
+
+
+message(STATUS "${EASTL_INCLUDE_DIR}")
+message(STATUS "${CMAKE_PREFIX_PATH}/lib")
+message(STATUS "${EASTL_LIB}")
+message(STATUS "${EASTL_LIB_FOUND}")
+
 
 message(STATUS "compiler options \"${_lib_name}\" with args:")
 foreach(_opt ${CMAKE_CXX_FLAGS})
@@ -28,21 +52,19 @@ target_sources(${_lib_name}
         ${_source_dir}/base/memory/rpmalloc/rpmalloc.c
         ${_source_dir}/base/memory/memory.h
         ${_source_dir}/base/memory/memory.cpp
+        ${_source_dir}/base/types/eastl_defs.h
+        ${_source_dir}/base/types/eastl_defs.cpp
     )
     
-target_link_libraries(${_lib_name} PRIVATE SDL3::SDL3-static EASTL::EASTL)
+#target_link_libraries(${_lib_name} PUBLIC SDL3::SDL3-static PRIVATE EASTL::EASTL)
+target_link_libraries(${_lib_name} PUBLIC SDL3::SDL3-static EASTL::EASTL)
+
 target_include_directories(${_lib_name} PUBLIC "${_source_dir}")
 
 
 add_executable(standalone "${CMAKE_CURRENT_SOURCE_DIR}/src/standalone/main.cpp")
-target_link_libraries(standalone PRIVATE ${_lib_name} SDL3::SDL3-static SDL3::SDL3-static EASTL::EASTL)
+target_link_libraries(standalone PUBLIC ${_lib_name})
 
-
-# set common cpp properties
-set( project_TARGETS
-     ${_lib_name}
-     standalone
-   )
 
 foreach( _target ${project_TARGETS} )
     target_compile_features(${_target} PRIVATE cxx_std_20)
