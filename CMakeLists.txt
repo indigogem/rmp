@@ -2,26 +2,37 @@ cmake_minimum_required(VERSION 3.29)
 
 project(kmp C CXX)
 
+set(_source_dir "${CMAKE_CURRENT_SOURCE_DIR}/src")
+set(_lib_name ${PROJECT_NAME})
+set( project_TARGETS
+     ${_lib_name}
+     standalone
+   )
 
 find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3)
 
-set(_source_dir "${CMAKE_CURRENT_SOURCE_DIR}/src")
+add_library(${_lib_name})
 
-file(GLOB_RECURSE headers CONFIGURE_DEPENDS "${_source_dir}/*.h")
-file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${_source_dir}/*.cpp")
+target_sources(${_lib_name}
+    PRIVATE
+        ${_source_dir}/defs.h
+        ${_source_dir}/base/application/app.h
+        ${_source_dir}/base/application/app.cpp
+        ${_source_dir}/base/memory/rpmalloc-1.4.5/rpmalloc.h
+        ${_source_dir}/base/memory/rpmalloc-1.4.5/rpmalloc.c
+    )
+    
+target_link_libraries(${_lib_name} PRIVATE SDL3::SDL3-static)
+target_include_directories(${_lib_name} PUBLIC "${_source_dir}")
 
-
-add_library(${PROJECT_NAME} ${headers} ${sources})
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3-static)
-target_include_directories(${PROJECT_NAME} PUBLIC "${_source_dir}")
 
 add_executable(standalone "${CMAKE_CURRENT_SOURCE_DIR}/src/standalone/main.cpp")
-target_link_libraries(standalone PRIVATE ${PROJECT_NAME} SDL3::SDL3-static)
+target_link_libraries(standalone PRIVATE ${_lib_name} SDL3::SDL3-static)
 
 
 # set common cpp properties
 set( project_TARGETS
-     ${PROJECT_NAME}
+     ${_lib_name}
      standalone
    )
 
