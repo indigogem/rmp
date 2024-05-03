@@ -2,7 +2,7 @@
 // #include <bgfx/bgfx.h>
 // #include <bgfx/platform.h>
 // #include <bx/bx.h>
-// #include "base/memory/memory.h"
+#include "base/memory/memory.h"
 // #include "base/logging/log.h"
 
 namespace kmp {
@@ -11,7 +11,7 @@ namespace kmp {
 
     AppGlobalState::AppGlobalState() {
 
-        // memory::Initialize();
+        memory::Initialize();
         // // threading::Initialize
         // log::Initialize();
         // // typesystem
@@ -24,7 +24,7 @@ namespace kmp {
 
         //memory::GetTotalAllocatedMemory();
         //log::Shutdown();
-        //memory::Shutdown();
+        memory::Shutdown();
 
         initialized_ = false;
     }
@@ -38,6 +38,9 @@ namespace kmp {
         // if (!engine_.Initialize(ws_.window_handler, ws_.width, ws_.height)) {
         //     return false;
         // }
+
+        int *pi = kmp::New<int>();
+        kmp::Delete(pi);
 
         return true;
     }
@@ -67,7 +70,7 @@ namespace kmp {
     // }
 
     bool App::InitiliseWindow() {
-        int err = SDL_Init(SDL_INIT_VIDEO);
+        int err = SDL_Init(0);
         if (err != 0) {
             return false;
         }
@@ -195,6 +198,7 @@ namespace kmp {
 
             while (SDL_PollEvent(&event)) {
                 OnEvent(event);
+                
 
                 if (application_requested_exit_) {
                     exit = true;

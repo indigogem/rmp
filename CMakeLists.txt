@@ -18,8 +18,10 @@ target_sources(${_lib_name}
         ${_source_dir}/defs.h
         ${_source_dir}/base/application/app.h
         ${_source_dir}/base/application/app.cpp
-        ${_source_dir}/base/memory/rpmalloc-1.4.5/rpmalloc.h
-        ${_source_dir}/base/memory/rpmalloc-1.4.5/rpmalloc.c
+        ${_source_dir}/base/memory/rpmalloc/rpmalloc.h
+        ${_source_dir}/base/memory/rpmalloc/rpmalloc.c
+        ${_source_dir}/base/memory/memory.h
+        ${_source_dir}/base/memory/memory.cpp
     )
     
 target_link_libraries(${_lib_name} PRIVATE SDL3::SDL3-static)
