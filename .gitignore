@@ -1,5 +1,6 @@
 build/
-thirdparty/
+thirdparty/install/
+thirdparty/build/
 tmp/
 lib/
 .vs
