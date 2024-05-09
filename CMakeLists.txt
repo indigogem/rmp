@@ -54,6 +54,10 @@ target_sources(${_lib_name}
         ${_source_dir}/base/memory/memory.cpp
         ${_source_dir}/base/types/eastl_defs.h
         ${_source_dir}/base/types/eastl_defs.cpp
+        ${_source_dir}/base/types/array.h
+        ${_source_dir}/base/types/string.h
+        ${_source_dir}/base/logging/log.h
+        ${_source_dir}/base/logging/log.cpp
     )
     
 #target_link_libraries(${_lib_name} PUBLIC SDL3::SDL3-static PRIVATE EASTL::EASTL)

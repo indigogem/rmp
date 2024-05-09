@@ -3,7 +3,9 @@
 // #include <bgfx/platform.h>
 // #include <bx/bx.h>
 #include "base/memory/memory.h"
-// #include "base/logging/log.h"
+#include "base/types/array.h"
+#include "base/types/string.h"
+#include "base/logging/log.h"
 
 namespace kmp {
 
@@ -13,7 +15,7 @@ namespace kmp {
 
         memory::Initialize();
         // // threading::Initialize
-        // log::Initialize();
+        log::Initialize();
         // // typesystem
 
         initialized_ = true;
@@ -23,7 +25,7 @@ namespace kmp {
         KMP_ASSERT(initialized_);
 
         //memory::GetTotalAllocatedMemory();
-        //log::Shutdown();
+        log::Shutdown();
         memory::Shutdown();
 
         initialized_ = false;
@@ -33,14 +35,13 @@ namespace kmp {
 
     bool App::Initialize() {
 
-        //KMP_LOG_INFO("System", nullptr, "Engine Application Startup");
+        KMP_LOG_INFO("System", nullptr, "Engine Application Startup");
 
         // if (!engine_.Initialize(ws_.window_handler, ws_.width, ws_.height)) {
         //     return false;
         // }
 
-        int *pi = kmp::New<int>();
-        kmp::Delete(pi);
+       
 
         return true;
     }
