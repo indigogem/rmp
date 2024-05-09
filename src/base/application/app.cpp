@@ -4,7 +4,7 @@
 // #include <bx/bx.h>
 #include "base/memory/memory.h"
 #include "base/types/array.h"
-#include "base/types/string.h"
+
 #include "base/logging/log.h"
 
 namespace kmp {
@@ -41,8 +41,6 @@ namespace kmp {
         //     return false;
         // }
 
-       
-
         return true;
     }
 
@@ -66,9 +64,9 @@ namespace kmp {
         return true;
     }
 
-    // void App::ShowFatalError(const String& error) {
-    //    // SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Fatal Error", error.c_str(), NULL);
-    // }
+    void App::ShowFatalError(const String& error) {
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Fatal Error", error.c_str(), NULL);
+    }
 
     bool App::InitiliseWindow() {
         int err = SDL_Init(0);

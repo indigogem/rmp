@@ -1,6 +1,7 @@
 #pragma once
 
 #include "defs.h"
+#include "base/types/string.h"
 // #include "base/types/array.h"
 // #include "engine/engine.h"
 #include <SDL.h>
@@ -55,7 +56,7 @@ namespace kmp {
         bool InitiliseWindow();
         bool ShutdownWindow();
 
-        //void ShowFatalError(String const& error);
+        void ShowFatalError(String const& error);
 
         void OnEvent(const SDL_Event& event);
 
