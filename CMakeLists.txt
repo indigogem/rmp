@@ -16,6 +16,7 @@ set( project_TARGETS
 
 find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3)
 find_package(EASTL MODULE REQUIRED)
+find_package(GLM MODULE REQUIRED)
 # find_library(EASTL_LIB 
              # NAMES EASTL
              # HINTS "${CMAKE_PREFIX_PATH}/lib"
@@ -58,12 +59,17 @@ target_sources(${_lib_name}
         ${_source_dir}/base/types/string.h
         ${_source_dir}/base/logging/log.h
         ${_source_dir}/base/logging/log.cpp
+        ${_source_dir}/base/time/time.h
+        ${_source_dir}/base/time/time.cpp
+        ${_source_dir}/base/time/timers.h
+        ${_source_dir}/base/time/time_stamp.h
+        ${_source_dir}/base/time/time_stamp.cpp      
         ${_source_dir}/engine/engine.cpp
         ${_source_dir}/engine/engine.h
     )
     
 #target_link_libraries(${_lib_name} PUBLIC SDL3::SDL3-static PRIVATE EASTL::EASTL)
-target_link_libraries(${_lib_name} PUBLIC SDL3::SDL3-static EASTL::EASTL)
+target_link_libraries(${_lib_name} PUBLIC SDL3::SDL3-static EASTL::EASTL GLM::GLM)
 
 target_include_directories(${_lib_name} PUBLIC "${_source_dir}")
 

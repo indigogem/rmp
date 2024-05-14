@@ -26,8 +26,13 @@ namespace kmp
     private:
         void ShwowFatalError(const String &error);
 
+        bool InitializeCoreSystems(void *_window_handle, int width, int height);
+        bool ShutdownCoreSystems();
+
     private:
         ErrorHandlingCb error_handler_;
+
+        // input::InputSystem input_system_;
 
         bool initialized_ = false;
     };

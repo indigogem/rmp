@@ -3,7 +3,7 @@
 #include "defs.h"
 #include "base/types/string.h"
 // #include "base/types/array.h"
-// #include "engine/engine.h"
+#include "engine/engine.h"
 #include <SDL.h>
 // #include <SDL_syswm.h>
 
@@ -67,7 +67,7 @@ namespace kmp
 
     private:
         WindowParams ws_;
-        // Engine engine_;
+        Engine engine_;
 
         bool initialized_ = false;
         bool application_requested_exit_ = false;

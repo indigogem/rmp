@@ -7,6 +7,13 @@
 
 #include "base/logging/log.h"
 
+#include <glm/vec3.hpp>                  // glm::vec3
+#include <glm/vec4.hpp>                  // glm::vec4
+#include <glm/mat4x4.hpp>                // glm::mat4
+#include <glm/ext/matrix_transform.hpp>  // glm::translate, glm::rotate, glm::scale
+#include <glm/ext/matrix_clip_space.hpp> // glm::perspective
+#include <glm/ext/scalar_constants.hpp>
+
 namespace kmp
 {
 
@@ -38,12 +45,21 @@ namespace kmp
 
     bool App::Initialize()
     {
+        glm::vec2 Rotate(0, 0);
+
+        glm::mat4 Projection = glm::perspective(glm::pi<float>() * 0.25f, 4.0f / 3.0f, 0.1f, 100.f);
+        glm::mat4 View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -3));
+        View = glm::rotate(View, Rotate.y, glm::vec3(-1.0f, 0.0f, 0.0f));
+        View = glm::rotate(View, Rotate.x, glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+        auto ret = Projection * View * Model;
 
         KMP_LOG_INFO("System", nullptr, "Engine Application Startup");
 
-        // if (!engine_.Initialize(ws_.window_handler, ws_.width, ws_.height)) {
-        //     return false;
-        // }
+        if (!engine_.Initialize(ws_.window_handler, ws_.width, ws_.height))
+        {
+            return false;
+        }
 
         return true;
     }
@@ -60,13 +76,12 @@ namespace kmp
 
     void App::ProcessInputMessage(const SDL_Event &input_event)
     {
-        //     //engine_.GetInputSystem()->ForwardInputMessageToInputDevices(input_event);
+        // engine_.GetInputSystem()->ForwardInputMessageToInputDevices(input_event);
     }
 
     bool App::ApplicationLoop()
     {
-        // return engine_.Update();
-        return true;
+        return engine_.Update();
     }
 
     void App::ShowFatalError(const String &error)
@@ -115,8 +130,9 @@ namespace kmp
     }
 
     App::App()
+        : engine_(ErrorHandlingCb([this](const String &error) -> void
+                                  { ShowFatalError(error); }))
     {
-        // : engine_(ErrorHandlingCb([this](const String& error)-> void { ShowFatalError(error); })) {
     }
 
     App::~App()
@@ -240,7 +256,7 @@ namespace kmp
 
     bool App::Shutdown()
     {
-        // engine_.Shutdown();
+        engine_.Shutdown();
         return true;
     }
 

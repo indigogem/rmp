@@ -4,3 +4,4 @@ project(thirdparty)
 
 add_subdirectory(sdl)
 add_subdirectory(eastl)
+add_subdirectory(glm)

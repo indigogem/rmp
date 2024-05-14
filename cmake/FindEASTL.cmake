@@ -4,15 +4,10 @@ find_library(
     EASTL_LIBRARY
     NAMES eastl
     HINTS ${CMAKE_PREFIX_PATH}/lib/
-    #PATH_SUFFIXES LibImagePipeline/native-linux-x64/
     )
 
-# find_path(EASTL_INCLUDE_DIR
-  # NAMES Pipeline.hpp
-  # HINTS ${CMAKE_PREFIX_PATH}/prebuilt/ ${CMAKE_INSTALL_INCLUDEDIR}
-  # PATH_SUFFIXES LibImagePipeline/native-linux-api/imagepipeline/ LibImagePipeline/imagepipeline)
 list(APPEND EASTL_INCLUDE_DIR "${CMAKE_PREFIX_PATH}/include")
-list(APPEND EASTL_INCLUDE_DIR "g:/projects/rmp/thirdparty/build/eastl/eastl/src/eastl/test/packages/EABase/include/Common")
+list(APPEND EASTL_INCLUDE_DIR "${CMAKE_PREFIX_PATH}/../build/eastl/eastl/src/eastl/test/packages/EABase/include/Common")
 
 include(FindPackageHandleStandardArgs)
 

@@ -7,8 +7,10 @@
 namespace kmp
 {
     using String = eastl::basic_string<char>;
+
     template <size_t S>
     using InlineString = eastl::fixed_string<char, S, true>;
+
     using InlineStringSized = eastl::fixed_string<char, 255, true>;
 
     // String
