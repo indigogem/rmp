@@ -14,7 +14,8 @@ static inline void DebugCrtDumpLeaks()
     _CrtDumpMemoryLeaks();
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[])
+{
 #if KMP_DEVELOPMENT
     DebugCrtInit(0);
 #endif
@@ -32,5 +33,3 @@ int main(int argc, char* argv[]) {
 
     return result;
 }
-
-

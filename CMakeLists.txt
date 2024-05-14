@@ -58,6 +58,8 @@ target_sources(${_lib_name}
         ${_source_dir}/base/types/string.h
         ${_source_dir}/base/logging/log.h
         ${_source_dir}/base/logging/log.cpp
+        ${_source_dir}/engine/engine.cpp
+        ${_source_dir}/engine/engine.h
     )
     
 #target_link_libraries(${_lib_name} PUBLIC SDL3::SDL3-static PRIVATE EASTL::EASTL)

@@ -7,11 +7,13 @@
 
 #include "base/logging/log.h"
 
-namespace kmp {
+namespace kmp
+{
 
     //-------------------------------------------------------------------------
 
-    AppGlobalState::AppGlobalState() {
+    AppGlobalState::AppGlobalState()
+    {
 
         memory::Initialize();
         // // threading::Initialize
@@ -21,10 +23,11 @@ namespace kmp {
         initialized_ = true;
     }
 
-    AppGlobalState::~AppGlobalState() {
+    AppGlobalState::~AppGlobalState()
+    {
         KMP_ASSERT(initialized_);
 
-        //memory::GetTotalAllocatedMemory();
+        // memory::GetTotalAllocatedMemory();
         log::Shutdown();
         memory::Shutdown();
 
@@ -33,7 +36,8 @@ namespace kmp {
 
     //-------------------------------------------------------------------------
 
-    bool App::Initialize() {
+    bool App::Initialize()
+    {
 
         KMP_LOG_INFO("System", nullptr, "Engine Application Startup");
 
@@ -44,47 +48,51 @@ namespace kmp {
         return true;
     }
 
-
-
-    bool App::ProcessCommandline(int32_t argc, char** argv) {
-
+    bool App::ProcessCommandline(int32_t argc, char **argv)
+    {
 
         return true;
     }
 
-    void App::ProcessWindowResizeMessage(int x, int y) {
+    void App::ProcessWindowResizeMessage(int x, int y)
+    {
     }
 
-    void App::ProcessInputMessage(const SDL_Event& input_event) {
-    //     //engine_.GetInputSystem()->ForwardInputMessageToInputDevices(input_event);
+    void App::ProcessInputMessage(const SDL_Event &input_event)
+    {
+        //     //engine_.GetInputSystem()->ForwardInputMessageToInputDevices(input_event);
     }
 
-    bool App::ApplicationLoop() {
-        //return engine_.Update();
+    bool App::ApplicationLoop()
+    {
+        // return engine_.Update();
         return true;
     }
 
-    void App::ShowFatalError(const String& error) {
+    void App::ShowFatalError(const String &error)
+    {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Fatal Error", error.c_str(), NULL);
     }
 
-    bool App::InitiliseWindow() {
+    bool App::InitiliseWindow()
+    {
         int err = SDL_Init(0);
-        if (err != 0) {
+        if (err != 0)
+        {
             return false;
         }
 
         const auto width = kVirtrualWindowsWidth;
         const auto heigth = kVirtrualWindowsHeight;
 
-        SDL_Window* window = SDL_CreateWindow(
+        SDL_Window *window = SDL_CreateWindow(
             "kmp",
             width,
             heigth,
-            0
-            );
+            0);
 
-        if (window == nullptr) {
+        if (window == nullptr)
+        {
             return false;
         }
 
@@ -98,94 +106,104 @@ namespace kmp {
         return true;
     }
 
-    bool App::ShutdownWindow() {
-        SDL_DestroyWindow(static_cast<SDL_Window*>(ws_.window_handler));
+    bool App::ShutdownWindow()
+    {
+        SDL_DestroyWindow(static_cast<SDL_Window *>(ws_.window_handler));
         SDL_Quit();
 
         return true;
     }
 
-    App::App() {
-       // : engine_(ErrorHandlingCb([this](const String& error)-> void { ShowFatalError(error); })) {
-
+    App::App()
+    {
+        // : engine_(ErrorHandlingCb([this](const String& error)-> void { ShowFatalError(error); })) {
     }
 
-    App::~App() {
-
+    App::~App()
+    {
     }
 
-    void App::OnEvent(const SDL_Event& event) {
-        switch (event.type) {
-            case SDL_EVENT_QUIT:
+    void App::OnEvent(const SDL_Event &event)
+    {
+        switch (event.type)
+        {
+        case SDL_EVENT_QUIT:
+        {
+            application_requested_exit_ = true;
+            break;
+        }
+
+        case SDL_EVENT_TERMINATING:
+        {
+            application_requested_exit_ = true;
+            break;
+        }
+
+        case SDL_EVENT_WINDOW_RESIZED:
+        {
+            if (IsInitialize())
             {
-                application_requested_exit_ = true;
-                break;
+                int32_t width = event.window.data1;
+                int32_t height = event.window.data2;
+                ProcessWindowResizeMessage(width, height);
+            }
+            break;
+        }
+
+        case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+        {
+            application_requested_exit_ = true;
+            break;
+        }
+
+        case SDL_EVENT_WINDOW_FOCUS_GAINED:
+        case SDL_EVENT_WINDOW_FOCUS_LOST:
+        {
+            if (IsInitialize())
+            {
+                ProcessInputMessage(event);
             }
 
-            case SDL_EVENT_TERMINATING:
-            {
-                application_requested_exit_ = true;
-                break;
-            }
+            break;
+        }
 
-            case SDL_EVENT_WINDOW_RESIZED:
+        case SDL_EVENT_KEY_DOWN:
+        case SDL_EVENT_KEY_UP:
+        case SDL_EVENT_MOUSE_MOTION:
+        case SDL_EVENT_MOUSE_BUTTON_UP:
+        case SDL_EVENT_MOUSE_BUTTON_DOWN:
+        case SDL_EVENT_MOUSE_WHEEL:
+        {
+            if (IsInitialize())
             {
-                if (IsInitialize()) {
-                    int32_t width = event.window.data1;
-                    int32_t height = event.window.data2;
-                    ProcessWindowResizeMessage(width, height);
-                }
-                break;
+                ProcessInputMessage(event);
             }
-
-            case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
-            {
-                application_requested_exit_ = true;
-                break;
-            }
-
-            case SDL_EVENT_WINDOW_FOCUS_GAINED:
-            case SDL_EVENT_WINDOW_FOCUS_LOST:
-            {
-                if (IsInitialize()) {
-                    ProcessInputMessage(event);
-                }
-
-                break;
-            }
-            
-            case SDL_EVENT_KEY_DOWN:
-            case SDL_EVENT_KEY_UP:
-            case SDL_EVENT_MOUSE_MOTION:
-            case SDL_EVENT_MOUSE_BUTTON_UP:
-            case SDL_EVENT_MOUSE_BUTTON_DOWN:
-            case SDL_EVENT_MOUSE_WHEEL:
-            {
-                if (IsInitialize()) {
-                    ProcessInputMessage(event);
-                }
-                break;
-            }
+            break;
+        }
         }
     }
 
-    int App::Run(int argc, char* argv[]) {
+    int App::Run(int argc, char *argv[])
+    {
 
         // TODO: initilise log filepath
 
-        // if (!ProcessCommandline(argc, argv)) {
-        //     ShowFatalError("Application failed to read settings correctly!");
-        //     return EXIT_FAILURE;
-        // }
-
-        if (!InitiliseWindow()) {
-            //ShowFatalError("Application failed to create window!");
+        if (!ProcessCommandline(argc, argv))
+        {
+            ShowFatalError("Application failed to read settings correctly!");
             return EXIT_FAILURE;
         }
 
-        if (!Initialize()) {
+        if (!InitiliseWindow())
+        {
+            ShowFatalError("Application failed to create window!");
+            return EXIT_FAILURE;
+        }
+
+        if (!Initialize())
+        {
             Shutdown();
-            //ShowFatalError("Application failed to initialize correctly!");
+            ShowFatalError("Application failed to initialize correctly!");
             return EXIT_FAILURE;
         }
 
@@ -193,20 +211,22 @@ namespace kmp {
 
         bool exit = false;
         SDL_Event event;
-        while (!exit) {
+        while (!exit)
+        {
 
-            while (SDL_PollEvent(&event)) {
+            while (SDL_PollEvent(&event))
+            {
                 OnEvent(event);
-                
 
-                if (application_requested_exit_) {
+                if (application_requested_exit_)
+                {
                     exit = true;
                 }
-                else {
+                else
+                {
                     exit = !ApplicationLoop();
                 }
             }
-
         }
 
         Shutdown();
@@ -218,12 +238,12 @@ namespace kmp {
         return EXIT_SUCCESS;
     }
 
-    bool App::Shutdown() {
-        //engine_.Shutdown();
+    bool App::Shutdown()
+    {
+        // engine_.Shutdown();
         return true;
     }
 
     //-------------------------------------------------------------------------
-
 
 } // kmp

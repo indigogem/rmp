@@ -5,28 +5,33 @@
 #include <dbghelp.h>
 #include <stdio.h>
 #include <chrono>
-//#include <ctime>
+// #include <ctime>
 
-
-namespace kmp {
-    namespace log {
+namespace kmp
+{
+    namespace log
+    {
         static bool is_log_system_initialized_ = false;
 
-        static char const* const severity_labels_[] = {"Message", "Warning", "Error", "Fatal Error"};
+        static char const *const severity_labels_[] = {"Message", "Warning", "Error", "Fatal Error"};
 
-        void Initialize() {
+        void Initialize()
+        {
             is_log_system_initialized_ = true;
         }
 
-        void Shutdown() {
+        void Shutdown()
+        {
             is_log_system_initialized_ = false;
         }
 
-        bool IsInitialized() {
+        bool IsInitialized()
+        {
             return is_log_system_initialized_;
         }
 
-        void AddEntry(Severity severity, char const* category, char const* source_info, char const* filename, int line_number, char const* message_format, ...) {
+        void AddEntry(Severity severity, char const *category, char const *source_info, char const *filename, int line_number, char const *message_format, ...)
+        {
             KMP_ASSERT(log::IsInitialized());
             va_list args;
             va_start(args, message_format);
@@ -34,7 +39,8 @@ namespace kmp {
             va_end(args);
         }
 
-        void AddEntryVarArgs(Severity severity, char const* category, char const* source_info, char const* filename, int line_number, char const* message_format, va_list args) {
+        void AddEntryVarArgs(Severity severity, char const *category, char const *source_info, char const *filename, int line_number, char const *message_format, va_list args)
+        {
 
             KMP_ASSERT(log::IsInitialized());
             KMP_ASSERT(category != nullptr && filename != nullptr && message_format != nullptr);
@@ -55,13 +61,14 @@ namespace kmp {
             va_end(args);
 
             InlineStringSized traceMessage;
-            if (!source_info) {
+            if (!source_info)
+            {
                 traceMessage.sprintf("[%s][%s][%s] %s", timestamp.c_str(), severity_labels_[(int32_t)severity], category, message.c_str());
             }
-            else {
+            else
+            {
                 traceMessage.sprintf("[%s][%s][%s][%s] %s", timestamp.c_str(), severity_labels_[(int32_t)severity], category, source_info, message.c_str());
             }
-
 
             // Print to debug trace
             KMP_TRACE_MSG(traceMessage.c_str());
@@ -70,7 +77,8 @@ namespace kmp {
             printf("%s\n", traceMessage.c_str());
         }
 
-        void TraceMessage(const char* format, ...) {
+        void TraceMessage(const char *format, ...)
+        {
             constexpr size_t const bufferSize = 2048;
             char messageBuffer[bufferSize]; // Dont make this static as we need this to be threadsafe!!!
 
@@ -80,7 +88,8 @@ namespace kmp {
             va_end(args);
 
             // Add newlines
-            if (numCharsWritten > 0 && numCharsWritten < 509) {
+            if (numCharsWritten > 0 && numCharsWritten < 509)
+            {
                 messageBuffer[numCharsWritten] = '\r';
                 messageBuffer[numCharsWritten + 1] = '\n';
                 messageBuffer[numCharsWritten + 2] = 0;
@@ -90,5 +99,3 @@ namespace kmp {
         }
     }
 }
-
-
