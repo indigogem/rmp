@@ -7,6 +7,8 @@ find_library(
     )
 
 list(APPEND EASTL_INCLUDE_DIR "${CMAKE_PREFIX_PATH}/include")
+
+# hacky, should be install to prefix_path
 list(APPEND EASTL_INCLUDE_DIR "${CMAKE_PREFIX_PATH}/../build/eastl/eastl/src/eastl/test/packages/EABase/include/Common")
 
 include(FindPackageHandleStandardArgs)

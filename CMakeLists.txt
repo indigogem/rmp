@@ -17,24 +17,11 @@ set( project_TARGETS
 find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3)
 find_package(EASTL MODULE REQUIRED)
 find_package(GLM MODULE REQUIRED)
-# find_library(EASTL_LIB 
-             # NAMES EASTL
-             # HINTS "${CMAKE_PREFIX_PATH}/lib"
-             # )
-             
 
-# add_library(eastl STATIC IMPORTED GLOBAL)
-# set_target_properties(eastl PROPERTIES
-    # IMPORTED_LOCATION ${EASTL_LIB}
-    # INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_PREFIX_PATH}/include;g:/projects/rmp/thirdparty/build/eastl/eastl/src/eastl/test/packages/EABase/include/Common"
-    # #INTERFACE_INCLUDE_DIRECTORIES "g:/projects/rmp/thirdparty/build/eastl/eastl/src/eastl/test/packages/EABase/include/Common"
-  # )
-
-
-message(STATUS "${EASTL_INCLUDE_DIR}")
-message(STATUS "${CMAKE_PREFIX_PATH}/lib")
-message(STATUS "${EASTL_LIB}")
-message(STATUS "${EASTL_LIB_FOUND}")
+# message(STATUS "${EASTL_INCLUDE_DIR}")
+# message(STATUS "${CMAKE_PREFIX_PATH}/lib")
+# message(STATUS "${EASTL_LIB}")
+# message(STATUS "${GLM_INCLUDE_DIR}")
 
 
 message(STATUS "compiler options \"${_lib_name}\" with args:")
@@ -64,11 +51,20 @@ target_sources(${_lib_name}
         ${_source_dir}/base/time/timers.h
         ${_source_dir}/base/time/time_stamp.h
         ${_source_dir}/base/time/time_stamp.cpp      
+        ${_source_dir}/base/math/math.h  
+        ${_source_dir}/base/input/input_state.h
+        ${_source_dir}/base/input/input_states/input_state_mouse.h
+        ${_source_dir}/base/input/input_states/input_state_keyboard.h
+        ${_source_dir}/base/input/input_system.h
+        ${_source_dir}/base/input/input_system.cpp
+        ${_source_dir}/base/input/input_device.h
+        ${_source_dir}/base/input/input_devices/input_device_keyboard_mouse.h
+        ${_source_dir}/base/input/input_devices/input_device_keyboard_mouse.cpp
+        
         ${_source_dir}/engine/engine.cpp
         ${_source_dir}/engine/engine.h
     )
     
-#target_link_libraries(${_lib_name} PUBLIC SDL3::SDL3-static PRIVATE EASTL::EASTL)
 target_link_libraries(${_lib_name} PUBLIC SDL3::SDL3-static EASTL::EASTL GLM::GLM)
 
 target_include_directories(${_lib_name} PUBLIC "${_source_dir}")
