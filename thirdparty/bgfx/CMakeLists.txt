@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.29)
 
-project(external-sdl)
+project(external-bgfx)
 include(ExternalProject)
 
 list(APPEND CMAKE_ARGS
@@ -9,21 +9,18 @@ list(APPEND CMAKE_ARGS
     "-DCMAKE_TOOLCHAIN_FILE:PATH=${CMAKE_TOOLCHAIN_FILE}"
     "-DCMAKE_POSITION_INDEPENDENT_CODE=ON"
     "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
-    "-DSDL_SHARED=ON"
-    "-DSDL_STATIC=ON"
     )
 
-message(STATUS "Preparing external project \"sdl\" with args:")
+message(STATUS "Preparing external project \"bgfx\" with args:")
 foreach(CMAKE_ARG ${CMAKE_ARGS})
     message(STATUS "-- ${CMAKE_ARG}")
 endforeach()
 
 ExternalProject_add(
-    SDL3
-    GIT_REPOSITORY https://github.com/libsdl-org/SDL
-    GIT_TAG prerelease-3.1.2
-    #GIT_TAG origin/main
+    BGFX
+    GIT_REPOSITORY https://github.com/bkaradzic/bgfx.cmake
+    GIT_TAG v1.127.8725-469
     GIT_SHALLOW 1
-    PREFIX sdl3
+    PREFIX bgfx
     CMAKE_ARGS "${CMAKE_ARGS}"
     )

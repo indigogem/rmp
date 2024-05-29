@@ -10,11 +10,18 @@ namespace kmp
 
     bool Engine::InitializeCoreSystems(void *_window_handle, int width, int height)
     {
+        if (!input_system_.Initialize())
+        {
+            KMP_LOG_ERROR("Input", nullptr, "Failed to initialize input");
+            return false;
+        }
+
         return true;
     }
 
     bool Engine::ShutdownCoreSystems()
     {
+        input_system_.Shutdown();
         return true;
     }
 

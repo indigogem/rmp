@@ -2,6 +2,7 @@
 #include "defs.h"
 #include "base/types/string.h"
 #include "base/types/array.h"
+#include "base/input/input_system.h"
 
 namespace kmp
 {
@@ -21,7 +22,7 @@ namespace kmp
         bool Shutdown();
         bool Update();
 
-        // inline input::InputSystem* GetInputSystem() { return input_system_; }
+        // inline input::InputSystem *GetInputSystem() { return input_system_; }
 
     private:
         void ShwowFatalError(const String &error);
@@ -32,7 +33,7 @@ namespace kmp
     private:
         ErrorHandlingCb error_handler_;
 
-        // input::InputSystem input_system_;
+        input::InputSystem input_system_;
 
         bool initialized_ = false;
     };

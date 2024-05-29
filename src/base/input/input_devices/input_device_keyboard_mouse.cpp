@@ -67,14 +67,20 @@ namespace kmp
                 g_keyMappings[SDLK_PERIOD] = KeyboardButton::Key_Period;
                 g_keyMappings[SDLK_SLASH] = KeyboardButton::Key_ForwardSlash;
                 g_keyMappings[SDLK_SEMICOLON] = KeyboardButton::Key_SemiColon;
-                g_keyMappings[SDLK_APOSTROPHE] = KeyboardButton::Key_Quote;
+
+                // g_keyMappings[SDLK_APOSTROPHE] = KeyboardButton::Key_Quote;
+                g_keyMappings[SDLK_QUOTE] = KeyboardButton::Key_Quote;
+
                 g_keyMappings[SDLK_LEFTBRACKET] = KeyboardButton::Key_LBracket;
                 g_keyMappings[SDLK_RIGHTBRACKET] = KeyboardButton::Key_RBracket;
                 g_keyMappings[SDLK_BACKSLASH] = KeyboardButton::Key_BackSlash;
                 g_keyMappings[SDLK_MINUS] = KeyboardButton::Key_Minus;
                 g_keyMappings[SDLK_EQUALS] = KeyboardButton::Key_Plus;
                 g_keyMappings[SDLK_BACKSPACE] = KeyboardButton::Key_Backspace;
-                g_keyMappings[SDLK_GRAVE] = KeyboardButton::Key_Tilde;
+
+                // g_keyMappings[SDLK_GRAVE] = KeyboardButton::Key_Tilde;
+                g_keyMappings[SDLK_BACKQUOTE] = KeyboardButton::Key_Tilde;
+
                 g_keyMappings[SDLK_TAB] = KeyboardButton::Key_Tab;
                 g_keyMappings[SDLK_CAPSLOCK] = KeyboardButton::Key_CapsLock;
                 g_keyMappings[SDLK_RETURN] = KeyboardButton::Key_Enter;

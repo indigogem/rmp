@@ -17,6 +17,7 @@ set( project_TARGETS
 find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3)
 find_package(EASTL MODULE REQUIRED)
 find_package(GLM MODULE REQUIRED)
+find_package(BGFX REQUIRED)
 
 # message(STATUS "${EASTL_INCLUDE_DIR}")
 # message(STATUS "${CMAKE_PREFIX_PATH}/lib")
@@ -65,7 +66,7 @@ target_sources(${_lib_name}
         ${_source_dir}/engine/engine.h
     )
     
-target_link_libraries(${_lib_name} PUBLIC SDL3::SDL3-static EASTL::EASTL GLM::GLM)
+target_link_libraries(${_lib_name} PUBLIC SDL3::SDL3-static EASTL::EASTL GLM::GLM bgfx::bgfx bgfx::bimg bgfx::bx)
 
 target_include_directories(${_lib_name} PUBLIC "${_source_dir}")
 
