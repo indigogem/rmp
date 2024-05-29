@@ -1,5 +1,6 @@
 #include "engine.h"
 #include "base/logging/log.h"
+#include "base/time/timers.h"
 
 namespace kmp
 {
@@ -10,6 +11,14 @@ namespace kmp
 
     bool Engine::InitializeCoreSystems(void *_window_handle, int width, int height)
     {
+        render_device_ = kmp::New<render::RenderDevice>();
+        if (!render_device_->Initialize(_window_handle, width, height))
+        {
+            KMP_LOG_ERROR("Render", nullptr, "Failed to create render device");
+            kmp::Delete(render_device_);
+            return false;
+        }
+
         if (!input_system_.Initialize())
         {
             KMP_LOG_ERROR("Input", nullptr, "Failed to initialize input");
@@ -22,6 +31,13 @@ namespace kmp
     bool Engine::ShutdownCoreSystems()
     {
         input_system_.Shutdown();
+
+        if (render_device_ != nullptr)
+        {
+            render_device_->Shutdown();
+            kmp::Delete(render_device_);
+        }
+
         return true;
     }
 
@@ -61,6 +77,13 @@ namespace kmp
     bool Engine::Update()
     {
         KMP_ASSERT(initialized_);
+
+        Milliseconds delta_time = 0;
+        {
+            ScopedTimer<PlatformClock> frame_timer(delta_time);
+
+            render_device_->PresentFrame();
+        }
 
         // KMP_PROFILE_FRAME("MainThread");
 
