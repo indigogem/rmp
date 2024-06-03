@@ -11,11 +11,11 @@ namespace kmp
 
     bool Engine::InitializeCoreSystems(void *_window_handle, int width, int height)
     {
-        render_device_ = kmp::New<render::RenderDevice>();
-        if (!render_device_->Initialize(_window_handle, width, height))
+        renderer_ = kmp::New<render::Renderer>();
+        if (!renderer_->Initialize(_window_handle, width, height))
         {
             KMP_LOG_ERROR("Render", nullptr, "Failed to create render device");
-            kmp::Delete(render_device_);
+            kmp::Delete(renderer_);
             return false;
         }
 
@@ -32,10 +32,10 @@ namespace kmp
     {
         input_system_.Shutdown();
 
-        if (render_device_ != nullptr)
+        if (renderer_ != nullptr)
         {
-            render_device_->Shutdown();
-            kmp::Delete(render_device_);
+            renderer_->Shutdown();
+            kmp::Delete(renderer_);
         }
 
         return true;
@@ -82,7 +82,7 @@ namespace kmp
         {
             ScopedTimer<PlatformClock> frame_timer(delta_time);
 
-            render_device_->PresentFrame();
+            renderer_->PresentFrame();
         }
 
         // KMP_PROFILE_FRAME("MainThread");

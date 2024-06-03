@@ -3,7 +3,7 @@
 #include "base/types/string.h"
 #include "base/types/array.h"
 #include "base/input/input_system.h"
-#include "base/render/render_device.h"
+#include "base/render/renderer.h"
 
 namespace kmp
 {
@@ -23,7 +23,7 @@ namespace kmp
         bool Shutdown();
         bool Update();
 
-        // inline input::InputSystem *GetInputSystem() { return input_system_; }
+        inline input::InputSystem *GetInputSystem() { return &input_system_; }
 
     private:
         void ShwowFatalError(const String &error);
@@ -37,7 +37,7 @@ namespace kmp
         input::InputSystem input_system_;
 
         // render
-        render::RenderDevice *render_device_ = nullptr;
+        render::Renderer *renderer_ = nullptr;
 
         bool initialized_ = false;
     };

@@ -41,6 +41,7 @@ target_sources(${_lib_name}
         ${_source_dir}/base/memory/rpmalloc/rpmalloc.c
         ${_source_dir}/base/memory/memory.h
         ${_source_dir}/base/memory/memory.cpp
+        ${_source_dir}/base/memory/ptrs.h
         ${_source_dir}/base/types/eastl_defs.h
         ${_source_dir}/base/types/eastl_defs.cpp
         ${_source_dir}/base/types/array.h
@@ -61,8 +62,8 @@ target_sources(${_lib_name}
         ${_source_dir}/base/input/input_device.h
         ${_source_dir}/base/input/input_devices/input_device_keyboard_mouse.h
         ${_source_dir}/base/input/input_devices/input_device_keyboard_mouse.cpp
-        ${_source_dir}/base/render/render_device.h
-        ${_source_dir}/base/render/render_device.cpp
+        ${_source_dir}/base/render/renderer.h
+        ${_source_dir}/base/render/renderer.cpp
         
         ${_source_dir}/engine/engine.cpp
         ${_source_dir}/engine/engine.h

@@ -1,12 +1,11 @@
 #include "app.h"
-// #include <bgfx/bgfx.h>
-// #include <bgfx/platform.h>
-// #include <bx/bx.h>
 #include "base/memory/memory.h"
 #include "base/types/array.h"
 
 #include "base/logging/log.h"
 #include "base/input/input_state.h"
+
+#include "base/memory/ptrs.h"
 
 namespace kmp
 {
@@ -62,7 +61,7 @@ namespace kmp
 
     void App::ProcessInputMessage(const SDL_Event &input_event)
     {
-        // engine_.GetInputSystem()->ForwardInputMessageToInputDevices(input_event);
+        engine_.GetInputSystem()->ForwardInputMessageToInputDevices(input_event);
     }
 
     bool App::ApplicationLoop()

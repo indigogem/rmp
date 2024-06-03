@@ -1,4 +1,4 @@
-#include "render_device.h"
+#include "renderer.h"
 #include <SDL.h>
 // #include <SDL_syswm.h>
 #include <bgfx/bgfx.h>
@@ -7,7 +7,20 @@
 
 namespace kmp::render
 {
-    bool RenderDevice::Initialize(void *_window_handle, int width, int height)
+
+    void *GetNativeWindowHandle(void *window_handle)
+    {
+        void *hwnd = nullptr;
+        SDL_PropertiesID props = SDL_GetWindowProperties(static_cast<SDL_Window *>(window_handle));
+
+#if BX_PLATFORM_WINDOWS
+        hwnd = SDL_GetProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, nullptr);
+#endif
+
+        return hwnd;
+    }
+
+    bool Renderer::Initialize(void *window_handle, int width, int height)
     {
 
         resolution_.x = width;
@@ -23,9 +36,7 @@ namespace kmp::render
         //     return false;
         // }
 
-        SDL_PropertiesID props = SDL_GetWindowProperties(static_cast<SDL_Window *>(_window_handle));
-        void *hwnd = SDL_GetProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, nullptr);
-
+        void *hwnd = GetNativeWindowHandle(window_handle);
         bgfx::Init init;
         init.type = bgfx::RendererType::Count;
         init.vendorId = BGFX_PCI_ID_NONE;
@@ -51,14 +62,17 @@ namespace kmp::render
         return true;
     }
 
-    void RenderDevice::Shutdown()
+    void Renderer::Shutdown()
     {
         bgfx::shutdown();
     }
 
-    void RenderDevice::PresentFrame()
+    void Renderer::PresentFrame()
     {
+        static int c = 0;
         bgfx::setViewRect(0, 0, 0, kVirtrualWindowsWidth, kVirtrualWindowsHeight);
+        bgfx::dbgTextClear();
+        bgfx::dbgTextPrintf(0, 1, 0x4f, "Counter:%d", ++c);
         bgfx::touch(0);
         bgfx::frame();
     }
