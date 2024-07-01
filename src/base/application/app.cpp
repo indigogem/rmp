@@ -38,7 +38,6 @@ namespace kmp
 
     bool App::Initialize()
     {
-
         KMP_LOG_INFO("System", nullptr, "Engine Application Startup");
 
         if (!engine_.Initialize(ws_.window_handler, ws_.width, ws_.height))
@@ -218,15 +217,15 @@ namespace kmp
             while (SDL_PollEvent(&event))
             {
                 OnEvent(event);
+            }
 
-                if (application_requested_exit_)
-                {
-                    exit = true;
-                }
-                else
-                {
-                    exit = !ApplicationLoop();
-                }
+            if (application_requested_exit_)
+            {
+                exit = true;
+            }
+            else
+            {
+                exit = !ApplicationLoop();
             }
         }
 

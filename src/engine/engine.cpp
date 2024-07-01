@@ -11,7 +11,8 @@ namespace kmp
 
     bool Engine::InitializeCoreSystems(void *_window_handle, int width, int height)
     {
-        renderer_ = kmp::New<render::Renderer>();
+        renderer_ = render::Renderer::Create();
+
         if (!renderer_->Initialize(_window_handle, width, height))
         {
             KMP_LOG_ERROR("Render", nullptr, "Failed to create render device");
@@ -35,7 +36,7 @@ namespace kmp
         if (renderer_ != nullptr)
         {
             renderer_->Shutdown();
-            kmp::Delete(renderer_);
+            render::Renderer::Destroy(renderer_);
         }
 
         return true;

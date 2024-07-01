@@ -21,4 +21,21 @@ namespace kmp
         using glm::vec2;
         using glm::zero;
     }
+
+    struct Rect
+    {
+        Rect() : x(0), y(0), w(0), h(0) {}
+        Rect(float _x, float _y, float _w, float _h) : x(_x), y(_y), w(_w), h(_h) {}
+
+        bool IsContain(float px, float py) const
+        {
+            return (px >= x && px <= x + w) && (py >= y && py <= y + h);
+        }
+        math::vec2 GetCenter() const { return math::vec2(x + w / 2.f, y + h / 2.f); }
+
+        float x;
+        float y;
+        float w;
+        float h;
+    };
 }

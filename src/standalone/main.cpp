@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 #if KMP_DEVELOPMENT
     DebugCrtInit(0);
 #endif
-    int result = 0;
+    int result = EXIT_SUCCESS;
     {
         kmp::AppGlobalState state;
         kmp::App app;
