@@ -5,6 +5,7 @@
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
 #include <bx/bx.h>
+#include <bx/timer.h>
 
 namespace kmp::render
 {
@@ -73,9 +74,11 @@ namespace kmp::render
     void Renderer::PresentFrame()
     {
         static int c = 0;
+        int64_t cnt = bx::getHPFrequency();
         bgfx::setViewRect(0, 0, 0, kVirtrualWindowsWidth, kVirtrualWindowsHeight);
         bgfx::dbgTextClear();
         bgfx::dbgTextPrintf(0, 1, 0x4f, "Counter:%d", ++c);
+        bgfx::dbgTextPrintf(0, 2, 0x4f, "HP Counter:%d", cnt);
         bgfx::touch(0);
         bgfx::frame();
     }

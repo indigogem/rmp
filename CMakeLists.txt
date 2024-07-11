@@ -67,6 +67,7 @@ target_sources(${_lib_name}
         
         ${_source_dir}/engine/engine.cpp
         ${_source_dir}/engine/engine.h
+        ${_source_dir}/engine/update_context.h
     )
     
 target_link_libraries(${_lib_name} PUBLIC SDL3::SDL3-static EASTL::EASTL GLM::GLM bgfx::bgfx bgfx::bimg bgfx::bx)
