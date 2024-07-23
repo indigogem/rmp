@@ -19,6 +19,8 @@ find_package(EASTL MODULE REQUIRED)
 find_package(GLM MODULE REQUIRED)
 find_package(BGFX REQUIRED)
 
+include(cmake/utils.cmake)
+
 # message(STATUS "${EASTL_INCLUDE_DIR}")
 # message(STATUS "${CMAKE_PREFIX_PATH}/lib")
 # message(STATUS "${EASTL_LIB}")
@@ -69,11 +71,13 @@ target_sources(${_lib_name}
         ${_source_dir}/engine/engine.h
         ${_source_dir}/engine/update_context.h
     )
+
+add_shaders_directory(shaders engine SHADERS_TARGET_NAME)
     
 target_link_libraries(${_lib_name} PUBLIC SDL3::SDL3-static EASTL::EASTL GLM::GLM bgfx::bgfx bgfx::bimg bgfx::bx)
+target_link_libraries(${_lib_name} PUBLIC ${SHADERS_TARGET_NAME})
 
 target_include_directories(${_lib_name} PUBLIC "${_source_dir}")
-
 
 add_executable(standalone "${CMAKE_CURRENT_SOURCE_DIR}/src/standalone/main.cpp")
 target_link_libraries(standalone PUBLIC ${_lib_name})

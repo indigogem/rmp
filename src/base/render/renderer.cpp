@@ -1,26 +1,82 @@
 #include "renderer.h"
 #include <SDL.h>
 #include "base/memory/memory.h"
-// #include <SDL_syswm.h>
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
 #include <bx/bx.h>
 #include <bx/timer.h>
 
+#include <bgfx/embedded_shader.h>
+
+#include <generated/shaders/engine/all.h>
+
+static const bgfx::EmbeddedShader kEmbeddedShaders[] = {
+    BGFX_EMBEDDED_SHADER(vs_basic),
+    BGFX_EMBEDDED_SHADER(fs_basic),
+    BGFX_EMBEDDED_SHADER_END(),
+};
+
+struct NormalColorVertex
+{
+    glm::vec2 position;
+    uint32_t color;
+};
+
+NormalColorVertex kTriangleVertices[] = {
+    {{-0.5f, -0.5f}, 0x339933FF},
+    {{0.5f, -0.5f}, 0x993333FF},
+    {{0.0f, 0.5f}, 0x333399FF},
+};
+
+const uint16_t kTriangleIndices[] = {
+    0,
+    1,
+    2,
+};
+
 namespace kmp::render
 {
 
-    void *GetNativeWindowHandle(void *window_handle)
+    struct Renderer::RendererImpl
     {
-        void *hwnd = nullptr;
-        SDL_PropertiesID props = SDL_GetWindowProperties(static_cast<SDL_Window *>(window_handle));
+        bgfx::ProgramHandle default_program = BGFX_INVALID_HANDLE;
+        bgfx::VertexBufferHandle vertex_buffer = BGFX_INVALID_HANDLE;
+        bgfx::IndexBufferHandle index_buffer = BGFX_INVALID_HANDLE;
+    };
+
+    namespace
+    {
+        ///////////////////////////////////////////////////////////////////////////////
+        // bgfx specific
+
+        bgfx::ProgramHandle CreateDefaultProgram()
+        {
+            bgfx::RendererType::Enum renderer_type = bgfx::getRendererType();
+            bgfx::ProgramHandle program = bgfx::createProgram(
+                bgfx::createEmbeddedShader(kEmbeddedShaders, renderer_type, "vs_basic"),
+                bgfx::createEmbeddedShader(kEmbeddedShaders, renderer_type, "fs_basic"),
+                true);
+            return program;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////
+        // sdl specific
+
+        void *GetNativeWindowHandle(void *window_handle)
+        {
+            void *hwnd = nullptr;
+            void *window = static_cast<SDL_Window *>(window_handle);
+            SDL_PropertiesID props = SDL_GetWindowProperties(static_cast<SDL_Window *>(window_handle));
 
 #if BX_PLATFORM_WINDOWS
-        hwnd = SDL_GetProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, nullptr);
+            hwnd = SDL_GetProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, nullptr);
 #endif
 
-        return hwnd;
+            return hwnd;
+        }
     }
+
+    ///////////////////////////////////////////////////////////////////////////////
 
     Renderer *Renderer::Create()
     {
@@ -30,6 +86,15 @@ namespace kmp::render
     void Renderer::Destroy(Renderer *renderer)
     {
         kmp::Delete(renderer);
+    }
+
+    Renderer::Renderer() : impl_(kmp::New<RendererImpl>())
+    {
+    }
+
+    Renderer::~Renderer()
+    {
+        kmp::Delete(impl_);
     }
 
     bool Renderer::Initialize(void *window_handle, int width, int height)
@@ -43,11 +108,15 @@ namespace kmp::render
 
         // init window
         void *hwnd = GetNativeWindowHandle(window_handle);
+
         bgfx::Init init;
         init.type = bgfx::RendererType::Count;
         init.vendorId = BGFX_PCI_ID_NONE;
         init.platformData.nwh = hwnd;
         init.platformData.type = bgfx::NativeWindowHandleType::Default;
+        // init.platformData.nwh  = entry::getNativeWindowHandle(entry::kDefaultWindowHandle);
+        // init.platformData.ndt  = entry::getNativeDisplayHandle();
+        // init.platformData.type = entry::getNativeWindowHandleType();
         init.resolution.width = width;
         init.resolution.height = height;
         init.resolution.reset = BGFX_RESET_VSYNC;
@@ -64,11 +133,37 @@ namespace kmp::render
         // Set view 0 clear state.
         bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x303030FF, 1.0f, 0);
 
+        impl_->default_program = CreateDefaultProgram();
+
+        bgfx::VertexLayout color_vertex_layout;
+        color_vertex_layout.begin()
+            .add(bgfx::Attrib::Position, 2, bgfx::AttribType::Float)
+            .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
+            .end();
+
+        impl_->vertex_buffer = bgfx::createVertexBuffer(bgfx::makeRef(kTriangleVertices, sizeof(kTriangleVertices)), color_vertex_layout);
+        impl_->index_buffer = bgfx::createIndexBuffer(bgfx::makeRef(kTriangleIndices, sizeof(kTriangleIndices)));
+
         return true;
     }
 
     void Renderer::Shutdown()
     {
+        if (bgfx::isValid(impl_->default_program))
+        {
+            bgfx::destroy(impl_->default_program);
+        }
+
+        if (bgfx::isValid(impl_->index_buffer))
+        {
+            bgfx::destroy(impl_->index_buffer);
+        }
+
+        if (bgfx::isValid(impl_->vertex_buffer))
+        {
+            bgfx::destroy(impl_->vertex_buffer);
+        }
+
         bgfx::shutdown();
     }
 
@@ -82,9 +177,9 @@ namespace kmp::render
             need_reset_params_ = false;
         }
 
-        bgfx::touch(0);
+        bgfx::setViewRect(0, 0, 0, render_params_.viewport.w, render_params_.viewport.h);
 
-        bgfx::dbgTextClear();
+        bgfx::touch(0);
 
         //   UpdateView(DEFAULT);
     }
@@ -98,12 +193,19 @@ namespace kmp::render
     {
         static int c = 0;
         int64_t cnt = bx::getHPFrequency();
-        bgfx::setViewRect(0, 0, 0, render_params_.viewport.w, render_params_.viewport.h);
+
         bgfx::dbgTextClear();
         bgfx::dbgTextPrintf(0, 1, 0x4f, "Counter:%d", ++c);
         bgfx::dbgTextPrintf(0, 2, 0x4f, "HP Counter:%d", cnt);
         // bgfx::touch(0);
         // bgfx::frame();
+
+        bgfx::setState(
+            BGFX_STATE_WRITE_R | BGFX_STATE_WRITE_G | BGFX_STATE_WRITE_B | BGFX_STATE_WRITE_A);
+
+        bgfx::setVertexBuffer(0, impl_->vertex_buffer);
+        bgfx::setIndexBuffer(impl_->index_buffer);
+        bgfx::submit(0, impl_->default_program);
     }
 
     void Renderer::ToggleFullScreen()

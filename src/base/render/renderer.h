@@ -2,11 +2,9 @@
 
 #include "defs.h"
 #include "base/math/math.h"
-// #include "base/memory/ptrs.h"
 
 namespace kmp::render
 {
-
     struct RenderParam
     {
         uint32_t screen_width;
@@ -23,13 +21,15 @@ namespace kmp::render
 
     class KMP_BASE_API Renderer final
     {
+        struct RendererImpl;
+
     public:
         [[nodiscard]] static Renderer *Create();
         static void Destroy(Renderer *renderer);
 
     public:
-        Renderer() = default;
-        ~Renderer() = default;
+        Renderer();
+        ~Renderer();
 
         bool Initialize(void *_window_handle, int width, int height);
         void Shutdown();
@@ -47,6 +47,8 @@ namespace kmp::render
     private:
         RenderParam render_params_;
         bool need_reset_params_ = false;
+
+        RendererImpl *impl_ = nullptr;
 
         // math::ivec2 resolution_;
     };
