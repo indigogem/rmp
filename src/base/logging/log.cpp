@@ -74,12 +74,12 @@ namespace kmp
             KMP_TRACE_MSG(traceMessage.c_str());
 
             // Print to std out
-            printf("%s\n", traceMessage.c_str());
+            printf_s("%s\n", traceMessage.c_str());
         }
-
+#ifdef _WIN32
         void TraceMessage(const char *format, ...)
         {
-            constexpr size_t const bufferSize = 2048;
+            constexpr size_t bufferSize = 2048;
             char messageBuffer[bufferSize]; // Dont make this static as we need this to be threadsafe!!!
 
             va_list args;
@@ -97,5 +97,6 @@ namespace kmp
 
             OutputDebugStringA(messageBuffer);
         }
+#endif
     }
 }

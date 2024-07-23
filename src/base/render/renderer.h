@@ -18,6 +18,7 @@ namespace kmp::render
         float scale;
         Rect viewport;
         void *window_handler;
+        bool is_full_screen;
     };
 
     class KMP_BASE_API Renderer final
@@ -33,8 +34,11 @@ namespace kmp::render
         bool Initialize(void *_window_handle, int width, int height);
         void Shutdown();
 
-        void PresentFrame();
-        void ResetParams() { need_reset_params_ = true; }
+        void Begin();
+        void End();
+        void Draw();
+        void NeedResetParams() { need_reset_params_ = true; }
+        void ToggleFullScreen();
 
     private:
         void UpdateDeviceParams(void *window);

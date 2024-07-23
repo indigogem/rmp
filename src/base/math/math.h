@@ -24,7 +24,7 @@ namespace kmp
 
     struct Rect
     {
-        Rect() : x(0), y(0), w(0), h(0) {}
+        Rect() = default;
         Rect(float _x, float _y, float _w, float _h) : x(_x), y(_y), w(_w), h(_h) {}
 
         bool IsContain(float px, float py) const
@@ -33,9 +33,9 @@ namespace kmp
         }
         math::vec2 GetCenter() const { return math::vec2(x + w / 2.f, y + h / 2.f); }
 
-        float x;
-        float y;
-        float w;
-        float h;
+        float x = 0;
+        float y = 0;
+        float w = 0;
+        float h = 0;
     };
 }

@@ -39,6 +39,7 @@ namespace kmp::render
         bgfx::renderFrame();
 
         render_params_.window_handler = window_handle;
+        render_params_.is_full_screen = false;
 
         // init window
         void *hwnd = GetNativeWindowHandle(window_handle);
@@ -71,16 +72,47 @@ namespace kmp::render
         bgfx::shutdown();
     }
 
-    void Renderer::PresentFrame()
+    void Renderer::Begin()
+    {
+        if (need_reset_params_)
+        {
+            // bgfx::submit(0, BGFX_INVALID_HANDLE, BGFX_INVALID_HANDLE);
+            UpdateDeviceParams(render_params_.window_handler);
+            bgfx::reset(render_params_.viewport.w, render_params_.viewport.h, BGFX_RESET_VSYNC);
+            need_reset_params_ = false;
+        }
+
+        bgfx::touch(0);
+
+        bgfx::dbgTextClear();
+
+        //   UpdateView(DEFAULT);
+    }
+
+    void Renderer::End()
+    {
+        bgfx::frame();
+    }
+
+    void Renderer::Draw()
     {
         static int c = 0;
         int64_t cnt = bx::getHPFrequency();
-        bgfx::setViewRect(0, 0, 0, kVirtrualWindowsWidth, kVirtrualWindowsHeight);
+        bgfx::setViewRect(0, 0, 0, render_params_.viewport.w, render_params_.viewport.h);
         bgfx::dbgTextClear();
         bgfx::dbgTextPrintf(0, 1, 0x4f, "Counter:%d", ++c);
         bgfx::dbgTextPrintf(0, 2, 0x4f, "HP Counter:%d", cnt);
-        bgfx::touch(0);
-        bgfx::frame();
+        // bgfx::touch(0);
+        // bgfx::frame();
+    }
+
+    void Renderer::ToggleFullScreen()
+    {
+        render_params_.is_full_screen = !render_params_.is_full_screen;
+
+        SDL_Window *sdl_window = static_cast<SDL_Window *>(render_params_.window_handler);
+        SDL_SetWindowFullscreen(sdl_window, render_params_.is_full_screen ? SDL_WINDOW_FULLSCREEN : 0);
+        NeedResetParams();
     }
 
     void Renderer::UpdateDeviceParams(void *window)

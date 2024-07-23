@@ -12,11 +12,11 @@ namespace kmp
         error_handler_(error);
     }
 
-    bool Engine::InitializeCoreSystems(void *_window_handle, int width, int height)
+    bool Engine::InitializeCoreSystems(void *window_handle, int width, int height)
     {
         renderer_ = render::Renderer::Create();
 
-        if (!renderer_->Initialize(_window_handle, width, height))
+        if (!renderer_->Initialize(window_handle, width, height))
         {
             KMP_LOG_ERROR("Render", nullptr, "Failed to create render device");
             kmp::Delete(renderer_);
@@ -101,7 +101,15 @@ namespace kmp
             {
                 update_context_.stage_ = UpdateStage::kFrameEnd;
 
-                renderer_->PresentFrame();
+                if (input_system_.GetKeyboardState()->IsAltHeldDown() && input_system_.GetKeyboardState()->WasEnterPressed())
+                {
+                    renderer_->ToggleFullScreen();
+                }
+
+                renderer_->Begin();
+                renderer_->Draw();
+                renderer_->End();
+
                 input_system_.ClearFrameState();
             }
         }
@@ -124,7 +132,6 @@ namespace kmp
             {
                 std::this_thread::sleep_for(std::chrono::milliseconds(delta_time));
                 delta_time = minimumFrameTime;
-                KMP_LOG("1");
             }
         }
 
