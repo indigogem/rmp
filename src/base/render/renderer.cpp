@@ -147,6 +147,9 @@ namespace kmp::render
         impl_->vertex_buffer = bgfx::createVertexBuffer(bgfx::makeRef(kTriangleVertices, sizeof(kTriangleVertices)), color_vertex_layout);
         impl_->index_buffer = bgfx::createIndexBuffer(bgfx::makeRef(kTriangleIndices, sizeof(kTriangleIndices)));
 
+        Blob data;
+        kmp::file::LoadFile("build/win/Debug/test.jpg", data);
+
         return true;
     }
 
