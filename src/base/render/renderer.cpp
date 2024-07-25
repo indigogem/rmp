@@ -148,7 +148,7 @@ namespace kmp::render
         impl_->index_buffer = bgfx::createIndexBuffer(bgfx::makeRef(kTriangleIndices, sizeof(kTriangleIndices)));
 
         Blob data;
-        kmp::file::LoadFile("build/win/Debug/test.jpg", data);
+        kmp::file::LoadFile("test.jpg", data);
 
         return true;
     }
