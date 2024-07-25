@@ -1,14 +1,16 @@
 #include "renderer.h"
+
 #include <SDL.h>
-#include "base/memory/memory.h"
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
 #include <bx/bx.h>
 #include <bx/timer.h>
-
 #include <bgfx/embedded_shader.h>
 
-#include <generated/shaders/engine/all.h>
+#include "generated/shaders/engine/all.h"
+#include "base/memory/memory.h"
+#include "base/filesystem/filesystem.h"
+#include "thirdparty/stb_image.h"
 
 static const bgfx::EmbeddedShader kEmbeddedShaders[] = {
     BGFX_EMBEDDED_SHADER(vs_basic),
@@ -56,6 +58,7 @@ namespace kmp::render
                 bgfx::createEmbeddedShader(kEmbeddedShaders, renderer_type, "vs_basic"),
                 bgfx::createEmbeddedShader(kEmbeddedShaders, renderer_type, "fs_basic"),
                 true);
+
             return program;
         }
 

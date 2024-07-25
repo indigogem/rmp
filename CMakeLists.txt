@@ -66,6 +66,10 @@ target_sources(${_lib_name}
         ${_source_dir}/base/input/input_devices/input_device_keyboard_mouse.cpp
         ${_source_dir}/base/render/renderer.h
         ${_source_dir}/base/render/renderer.cpp
+        ${_source_dir}/base/filesystem/filesystem.h
+        ${_source_dir}/base/filesystem/filesystem.cpp
+        ${_source_dir}/thirdparty/stb_image.h
+        ${_source_dir}/thirdparty/stb.cpp
         
         ${_source_dir}/engine/engine.cpp
         ${_source_dir}/engine/engine.h

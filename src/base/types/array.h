@@ -8,11 +8,12 @@
 
 namespace kmp
 {
-
     template <typename T>
     using Vector = eastl::vector<T>;
+
     template <typename T, size_t S>
     using InlineVector = eastl::fixed_vector<T, S, true>;
+
     template <typename T, size_t S>
     using Array = eastl::array<T, S>;
 
